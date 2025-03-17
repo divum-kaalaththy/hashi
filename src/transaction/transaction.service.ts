@@ -10,6 +10,7 @@ import { AlgoTxCrafter, CrafterFactory } from "src/chain/crafter.factory"
 // import { AssetConfigTxBuilder, IAssetConfigTxBuilder } from "src/chain/algorand.transaction.acfg"
 import algosdk from "algosdk"
 import { AlgorandClient, Config } from '@algorandfoundation/algokit-utils'
+import * as fs from "fs";
 
 interface Assetparams {
     assetName?: string;
@@ -44,7 +45,9 @@ export class TransactionService implements OnModuleInit {
 	 *
 	 */
 	async onModuleInit() {
-		await this.auth(this.configService.get<string>("VAULT_TOKEN"))
+        // fetch root token
+        const rootToken: string = JSON.parse(fs.readFileSync('vault-seal-keys.json').toString()).root_token
+		await this.auth(rootToken)
 	}
 
     /**

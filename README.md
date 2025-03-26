@@ -126,7 +126,7 @@ Submit each command individually. This is just a demonstration of the steps invo
 $ yarn
 
 # Launch Vault
-$ docker-compose up -d
+$ docker-compose up -d --build
 ``` 
 
 

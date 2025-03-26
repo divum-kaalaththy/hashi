@@ -6,7 +6,6 @@ dotenv.config();
 const VAULT_BASE_URL = process.env.VAULT_BASE_URL;
 
 // init vault POST request
-console.log('VAULT_BASE_URL: ', VAULT_BASE_URL);
 axios.post(`${VAULT_BASE_URL}/v1/sys/init`, {
   secret_shares: 1,
   secret_threshold: 1

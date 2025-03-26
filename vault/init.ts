@@ -16,7 +16,6 @@ axios.post(`${VAULT_BASE_URL}/v1/sys/init`, {
     "Content-Type": "application/json",
   },
 }).then(async (result) => {
-  debugger;
   fs.writeFileSync("vault-seal-keys.json", JSON.stringify(result.data));
     
   var keys = result.data.keys;
@@ -41,7 +40,6 @@ axios.post(`${VAULT_BASE_URL}/v1/sys/init`, {
   // notify success
   console.log(`vault is unsealed`)
 }).catch(err => {
-  debugger;
   console.log(`failed to init. Trying to unseal if already initialized...`, err)
 
   // trying to unseal

@@ -61,9 +61,7 @@ export class VaultService {
 		// fetch root token
 		// const token: string = JSON.parse(fs.readFileSync("vault-seal-keys.json").toString()).root_token
 		// const sampleKey: string = crypto.randomUUID()
-		console.log('keyGen:', keyName);
 		const transitKeyURL = `${this.vaultBaseUrl}/v1/transit/keys/${keyName}`;
-		console.log('transitKeyURL:', transitKeyURL);
 		let res: AxiosResponse = null;
 		try{
 			res = await this.httpService.axiosRef.post(

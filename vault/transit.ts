@@ -3,16 +3,16 @@ import axios from 'axios'
 import * as dotenv from "dotenv";
 dotenv.config();
 
-const VAULT_URL = process.env.VAULT_ADDR;
+const VAULT_BASE_URL = process.env.VAULT_BASE_URL;
 
-axios.get(`${VAULT_URL}/v1/sys/init`).then(async (res) => {
+axios.get(`${VAULT_BASE_URL}/v1/sys/init`).then(async (res) => {
     if(!res.data.initialized) throw new Error('vault is not initialized')
 
     // fetch root token
     const rootToken: string = JSON.parse(fs.readFileSync('vault-seal-keys.json').toString()).root_token
 
     // list mounts
-    const mounts = await axios.get(`${VAULT_URL}/v1/sys/mounts`, {
+    const mounts = await axios.get(`${VAULT_BASE_URL}/v1/sys/mounts`, {
         headers: {
             'X-Vault-Token': rootToken
         }
@@ -20,7 +20,7 @@ axios.get(`${VAULT_URL}/v1/sys/init`).then(async (res) => {
     console.log(`mounts : ${JSON.stringify(mounts.data)}`)
 
     // mount transit engine through POST
-    const mountTransitEngine = await axios.post(`${VAULT_URL}/v1/sys/mounts/transit`, {
+    const mountTransitEngine = await axios.post(`${VAULT_BASE_URL}/v1/sys/mounts/transit`, {
         type: 'transit',
         config: {
             force_no_cache: true

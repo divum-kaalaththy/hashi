@@ -35,8 +35,9 @@ async function bootstrap() {
 		app.useStaticAssets(join(__dirname, "..", "documentation"))
 	}
 
-	app.listen(8081, '0.0.0.0', () => {
-		console.log('Server running on port 8080');
+	const applicationPort = process.env.APP_PORT;
+	app.listen(applicationPort, '0.0.0.0', () => {
+		console.log(`Server running on port ${applicationPort}`);
 	});
 }
 bootstrap()

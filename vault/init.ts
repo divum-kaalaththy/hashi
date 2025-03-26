@@ -3,11 +3,11 @@ import axios from 'axios'
 import * as dotenv from "dotenv";
 dotenv.config();
 
-const VAULT_URL = process.env.VAULT_ADDR;
+const VAULT_BASE_URL = process.env.VAULT_BASE_URL;
 
 // init vault POST request
-console.log('VAULT_URL: ', VAULT_URL);
-axios.post(`${VAULT_URL}/v1/sys/init`, {
+console.log('VAULT_BASE_URL: ', VAULT_BASE_URL);
+axios.post(`${VAULT_BASE_URL}/v1/sys/init`, {
   secret_shares: 1,
   secret_threshold: 1
 },
@@ -25,7 +25,7 @@ axios.post(`${VAULT_URL}/v1/sys/init`, {
   console.log(`token : ${token}`)
 
   // unseal vault server
-  const unsealResult = await axios.post(`${VAULT_URL}/v1/sys/unseal`, {
+  const unsealResult = await axios.post(`${VAULT_BASE_URL}/v1/sys/unseal`, {
     secret_shares: 1,
     key: keys[0]
   }, {
@@ -47,7 +47,7 @@ axios.post(`${VAULT_URL}/v1/sys/init`, {
   // trying to unseal
   const firstKey: string = JSON.parse(fs.readFileSync('vault-seal-keys.json').toString()).keys[0]
 
-  axios.post(`${VAULT_URL}/v1/sys/unseal`, {
+  axios.post(`${VAULT_BASE_URL}/v1/sys/unseal`, {
     secret_shares: 1,
     key: firstKey
   },

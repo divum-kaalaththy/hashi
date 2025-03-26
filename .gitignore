@@ -9,3 +9,4 @@ data/
 volumes/logs
 volumes/file
 vault-seal-keys.json
+.DS_Store

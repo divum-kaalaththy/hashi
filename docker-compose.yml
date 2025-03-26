@@ -9,25 +9,34 @@ services:
     ports:
       - "8200:8200"
     environment:
-      VAULT_ADDR: "http://vault:8200"
+      VAULT_BASE_URL: "http://vault:8200"
     volumes:
       - ./volumes/logs:/vault/logs
       - ./volumes/file:/vault/file
       - ./volumes/config:/vault/config
     entrypoint: vault server -config=/vault/config/vault.json
     networks:
-      - hashi_wallet
+      - wallet
 
   hashi-api:
     image: hashi-api
     container_name: hashi-api
     ports:
       - "8081:8081"
+    environment:
+      - GENESIS_ID=testnet-v1.0
+      - GENESIS_HASH=SGO1GKSzyE7IEPItTxCByw9x8FmnrCDexi9/cOUJOiI=
+      - NODE_HTTP_SCHEME=https
+      - NODE_PORT=443
+      - NODE_HOST=testnet-api.algonode.cloud
+      - NODE_TOKEN=''
+      - VAULT_BASE_URL=http://vault:8200
+      - APP_PORT=8081
     depends_on:
       - vault
     networks:
-      - hashi_wallet
+      - wallet
 
 networks:
-  hashi_wallet:
+  wallet:
     driver: bridge

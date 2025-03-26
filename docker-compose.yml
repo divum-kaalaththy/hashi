@@ -1,37 +1,37 @@
 version: '3.8'
+
 services:
+
   vault:
     image: hashicorp/vault:latest
     container_name: vault
-    restart: always
-    cap_add:
-      - IPC_LOCK
     ports:
       - "8200:8200"
-    environment:
-      VAULT_BASE_URL: "http://vault:8200"
+    restart: always
     volumes:
       - ./volumes/logs:/vault/logs
       - ./volumes/file:/vault/file
       - ./volumes/config:/vault/config
+    cap_add:
+      - IPC_LOCK
     entrypoint: vault server -config=/vault/config/vault.json
+    environment:
+      VAULT_BASE_URL: "http://vault:8200"
     networks:
       - wallet
 
   hashi-api:
-    image: hashi-api
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    image: hashi-api-dev
     container_name: hashi-api
+    restart: always
+    working_dir: /opt/app
+    env_file:
+      - .env
     ports:
-      - "8081:8081"
-    environment:
-      - GENESIS_ID=testnet-v1.0
-      - GENESIS_HASH=SGO1GKSzyE7IEPItTxCByw9x8FmnrCDexi9/cOUJOiI=
-      - NODE_HTTP_SCHEME=https
-      - NODE_PORT=443
-      - NODE_HOST=testnet-api.algonode.cloud
-      - NODE_TOKEN=''
-      - VAULT_BASE_URL=http://vault:8200
-      - APP_PORT=8081
+      - "8080:8080"
     depends_on:
       - vault
     networks:
@@ -39,4 +39,5 @@ services:
 
 networks:
   wallet:
+    external: false
     driver: bridge

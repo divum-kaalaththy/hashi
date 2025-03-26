@@ -9,17 +9,17 @@ export type HashAlgorithm = "sha2-256" | "sha2-512"
 @Injectable()
 export class VaultService {
 	private latestToken: string;
-	private vaultAddress: string
+	private vaultBaseUrl: string
 
 	constructor(
 		private readonly httpService: HttpService,
 		private readonly configService: ConfigService
 	) {
-		this.vaultAddress = this.configService.get<string>("VAULT_ADDR")
+		this.vaultBaseUrl = this.configService.get<string>("VAULT_BASE_URL")
 	}
 
 	async auth(token: string): Promise<boolean> {
-		const res: AxiosResponse = await this.httpService.axiosRef.get(`${this.vaultAddress}/v1/sys/auth`, {
+		const res: AxiosResponse = await this.httpService.axiosRef.get(`${this.vaultBaseUrl}/v1/sys/auth`, {
 			headers: {
 				"X-Vault-Token": token,
 			},
@@ -62,7 +62,7 @@ export class VaultService {
 		// const token: string = JSON.parse(fs.readFileSync("vault-seal-keys.json").toString()).root_token
 		// const sampleKey: string = crypto.randomUUID()
 		console.log('keyGen:', keyName);
-		const transitKeyURL = `${this.vaultAddress}/v1/transit/keys/${keyName}`;
+		const transitKeyURL = `${this.vaultBaseUrl}/v1/transit/keys/${keyName}`;
 		console.log('transitKeyURL:', transitKeyURL);
 		let res: AxiosResponse = null;
 		try{
@@ -81,7 +81,6 @@ export class VaultService {
 			}
 		)
 		} catch (error) {
-			// Logger.error("Failed to generate keys to vault", "VaultService.keyGen", this.latestToken)
 			Logger.error("Failed to generate keys to vault", "VaultService.keyGen", error)
 		}
 
@@ -100,7 +99,7 @@ export class VaultService {
 	 */
 	async sign(keyName: string, data: Buffer, hashAlgorithm: HashAlgorithm, permissionedToken?: string): Promise<Buffer> {
 		const result: AxiosResponse = await this.httpService.axiosRef.post(
-			`${this.vaultAddress}/v1/transit/sign/${keyName}`,
+			`${this.vaultBaseUrl}/v1/transit/sign/${keyName}`,
 			{
 				input: data.toString("base64"),
 			},

@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
 
   vault:
@@ -12,6 +10,8 @@ services:
       - ./volumes/logs:/vault/logs
       - ./volumes/file:/vault/file
       - ./volumes/config:/vault/config
+      - vault_data:/vault/data
+      # - ./vault-seal-keys.json:/vault/file/vault-seal-keys.json
     cap_add:
       - IPC_LOCK
     entrypoint: vault server -config=/vault/config/vault.json
@@ -32,10 +32,17 @@ services:
       - .env
     ports:
       - "8080:8080"
+    volumes:
+      - vault_data:/vault/data
+      - ./vault-seal-keys.json:/vault/file/vault-seal-keys.json
     depends_on:
       - vault
     networks:
       - wallet
+
+volumes:
+  vault_data:
+    driver: local
 
 networks:
   wallet:

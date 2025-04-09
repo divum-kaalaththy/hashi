@@ -4,6 +4,7 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 const VAULT_BASE_URL = process.env.VAULT_BASE_URL;
+console.log('VAULT base url: ', VAULT_BASE_URL);
 
 // init vault POST request
 axios.post(`${VAULT_BASE_URL}/v1/sys/init`, {
@@ -15,6 +16,7 @@ axios.post(`${VAULT_BASE_URL}/v1/sys/init`, {
     "Content-Type": "application/json",
   },
 }).then(async (result) => {
+  console.log('Vault Seal JSON data: ', result.data);
   fs.writeFileSync("vault-seal-keys.json", JSON.stringify(result.data));
     
   var keys = result.data.keys;
